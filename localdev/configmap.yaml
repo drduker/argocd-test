@@ -289,22 +289,22 @@ addons:
           value: "true"
         - name: QUANTUM_EMITTER_NATS_SERVER
           value: nats
-      extraInitContainers: |-
-        - name: plugin
-          image: registry1.dso.mil/ironbank/big-bang/p1-keycloak-plugin:3.5.0
-          command:
-          - sh
-          - -c
-          - |
-            cp /app/p1-keycloak-plugin.jar /init
-            ls -l /init
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-          volumeMounts:
-          - name: plugin
-            mountPath: "/init"
+      # extraInitContainers: |-
+      #   - name: plugin
+      #     image: registry1.dso.mil/ironbank/big-bang/p1-keycloak-plugin:3.5.0
+      #     command:
+      #     - sh
+      #     - -c
+      #     - |
+      #       cp /app/p1-keycloak-plugin.jar /init
+      #       ls -l /init
+      #     securityContext:
+      #       capabilities:
+      #         drop:
+      #           - ALL
+      #     volumeMounts:
+      #     - name: plugin
+      #       mountPath: "/init"
       extraPorts:
         - containerPort: 7800
           name: tcp
@@ -317,9 +317,9 @@ addons:
           mountPath: /opt/keycloak/data/import/realm.json
           subPath: realm.json
           readOnly: true
-# - name: quarkusproperties
-#   mountPath: /opt/keycloak/conf/quarkus.properties
-#   subPath: quarkus.properties
+        - name: quarkusproperties
+          mountPath: /opt/keycloak/conf/quarkus.properties
+          subPath: quarkus.properties
 # - name: plugin
 #   mountPath: /opt/keycloak/providers/p1-keycloak-plugin.jar
 #   subPath: p1-keycloak-plugin.jar
@@ -327,12 +327,12 @@ addons:
         - name: realm
           configMap:
             name: gamewarden-realm
+        - name: quarkusproperties
+          secret:
+            secretName: keycloak-quarkusproperties
+            defaultMode: 0777
 # - name: plugin
 #   emptyDir: {}
-# - name: quarkusproperties
-#   secret:
-#     secretName: keycloak-quarkusproperties
-#     defaultMode: 0777
       hostname: gw.local
       istio:
         enabled: true
