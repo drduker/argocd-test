@@ -277,18 +277,10 @@ addons:
           value: login.gw.local
         - name: KC_LOG_LEVEL
           value: "org.keycloak.events:DEBUG,org.infinispan:INFO,org.jgroups:INFO"
-        - name: QUARKUS_HTTP_ACCESS_LOG_ENABLED
-          value: "true"
         - name: KC_HOSTNAME_STRICT
           value: "false"
         - name: KC_HOSTNAME_STRICT_HTTPS
           value: "false"
-        - name: KC_SPI_X509CERT_LOOKUP_PROVIDER
-          value: nginx
-        - name: KC_SPI_X509CERT_LOOKUP_NGINX_SSL_CLIENT_CERT
-          value: istio-mtls-client-certificate
-        - name: KC_SPI_X509CERT_LOOKUP_NGINX_SSL_CLIENT_CERT_CHAIN_PREFIX
-          value: UNUSED
         - name: KC_PROXY_HEADERS
           value: xforwarded
         - name: KC_PROXY_ADDRESS_FORWARDING
@@ -321,9 +313,6 @@ addons:
           name: tcp-fd
           protocol: TCP
       extraVolumeMounts: |-
-        - name: plugin
-          mountPath: /opt/keycloak/providers/p1-keycloak-plugin.jar
-          subPath: p1-keycloak-plugin.jar
         - name: quarkusproperties
           mountPath: /opt/keycloak/conf/quarkus.properties
           subPath: quarkus.properties
@@ -331,16 +320,19 @@ addons:
           mountPath: /opt/keycloak/data/import/realm.json
           subPath: realm.json
           readOnly: true
+# - name: plugin
+#   mountPath: /opt/keycloak/providers/p1-keycloak-plugin.jar
+#   subPath: p1-keycloak-plugin.jar
       extraVolumes: |-
-        - name: plugin
-          emptyDir: {}
-        - name: quarkusproperties
-          secret:
-            secretName: keycloak-quarkusproperties
-            defaultMode: 0777
         - name: realm
           configMap:
             name: gamewarden-realm
+# - name: plugin
+#   emptyDir: {}
+# - name: quarkusproperties
+#   secret:
+#     secretName: keycloak-quarkusproperties
+#     defaultMode: 0777
       hostname: gw.local
       istio:
         enabled: true
