@@ -313,13 +313,13 @@ addons:
           name: tcp-fd
           protocol: TCP
       extraVolumeMounts: |-
-        - name: quarkusproperties
-          mountPath: /opt/keycloak/conf/quarkus.properties
-          subPath: quarkus.properties
         - name: realm
           mountPath: /opt/keycloak/data/import/realm.json
           subPath: realm.json
           readOnly: true
+# - name: quarkusproperties
+#   mountPath: /opt/keycloak/conf/quarkus.properties
+#   subPath: quarkus.properties
 # - name: plugin
 #   mountPath: /opt/keycloak/providers/p1-keycloak-plugin.jar
 #   subPath: p1-keycloak-plugin.jar
