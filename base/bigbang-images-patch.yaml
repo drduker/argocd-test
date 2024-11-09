@@ -1,0 +1,291 @@
+addons:
+  argocd:
+    values:
+      dex:
+        image:
+          repository: r.gamewarden.io/base/dex/dexidp
+          tag: 2.41.1-r1
+      global:
+        image:
+          repository: r.gamewarden.io/base/argocd
+          tag: 2.12.6-r1
+      redis:
+        exporter:
+          image:
+            registry: r.gamewarden.io
+            repository: base/redis-exporter
+            tag: v1.63.0
+        image:
+          registry: r.gamewarden.io
+          repository: base/bitnami/redis
+          tag: 7.4.0
+  authservice:
+    values:
+      image:
+        repository: r.gamewarden.io/base/authservice
+        tag: 1.0.3-r0
+      redis:
+        image:
+          registry: r.gamewarden.io
+          repository: base/bitnami/redis
+          tag: 7.4.0
+  keycloak:
+    values:
+      dbchecker:
+        image:
+          repository: r.gamewarden.io/base/postgres-cloudnative-pg
+          tag: '16.4-r0'
+      image:
+        repository: r.gamewarden.io/base/keycloak
+        tag: 25.0.6-r0
+      postgresql:
+        image:
+          registry: r.gamewarden.io
+          repository: base/postgres-cloudnative-pg
+          tag: '16.4-r0'
+        securityContext:
+          fsGroup: 70
+          runAsUser: 70
+          runAsGroup: 70
+        containerSecurityContext:
+          runAsUser: 70
+  minioOperator:
+    values:
+      operator:
+        image:
+          repository: r.gamewarden.io/base/minio-operator
+          tag: 6.0.4-r0
+        sidecarImage:
+          repository: r.gamewarden.io/base/minio-operator-sidecar
+          tag: 6.0.2
+
+  metricsServer:
+    values:
+      addonResizer:
+        image:
+          repository: registry.k8s.io/autoscaling/addon-resizer
+          tag: 1.8.21
+      image:
+        repository: r.gamewarden.io/base/metrics-server
+        tag: 0.7.2-r1
+grafana:
+  values:
+    global:
+      imageRegistry: r.gamewarden.io
+    image:
+      repository: base/grafana-plugins
+      tag: 11.2.0
+    sidecar:
+      image:
+        repository: base/k8s-sidecar
+        tag: 1.27.6
+istio:
+  values:
+    hub: r.gamewarden.io/base
+    tag: 1.22.4
+    values:
+      global:
+        proxy:
+          image: istio-proxy
+        proxy_init:
+          image: istio-proxy
+      pilot:
+        image: istio-pilot
+      postInstallHook:
+        image: r.gamewarden.io/base/base
+        tag: 0.1.0-r0
+    waitJob:
+      scripts:
+        image: r.gamewarden.io/base/kubectl_dev:1.30.3-r0
+istioOperator:
+  values:
+    hub: r.gamewarden.io/base
+    image: istio-operator
+    tag: '1.22.4'
+kiali:
+  values:
+    image:
+      repo: registry1.dso.mil/ironbank/opensource/kiali/kiali-operator
+      tag: v1.89.7
+    svcPatchJob:
+      image:
+        repository: registry1.dso.mil/ironbank/big-bang/base
+        tag: 2.1.0
+    waitJob:
+      scripts:
+        image: r.gamewarden.io/base/kubectl:1.31.2-r1
+kyverno:
+  values:
+    global:
+      image:
+        registry: r.gamewarden.io
+    config:
+      defaultRegistry: r.gamewarden.io
+    admissionController:
+      container:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kyverno
+          tag: 1.12.6-r0
+      initContainer:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kyvernopre
+          tag: 1.12.6-r0
+    backgroundController:
+      image:
+        registry: r.gamewarden.io
+        repository: base/background-controller
+        tag: 1.12.6-r0
+    cleanupController:
+      image:
+        registry: r.gamewarden.io
+        repository: base/cleanup-controller
+        tag: 1.12.6-r0
+    reportsController:
+      image:
+        registry: r.gamewarden.io
+        repository: base/reports-controller
+        tag: 1.12.6-r0
+    clusterAdmissionReports:
+      image:
+        registry: r.gamewarden.io
+        repository: base/kubectl
+        tag: 1.31.2-r1
+    cleanupJobs:
+      webhooksCleanup:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      policyReportsCleanup:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      updateRequests:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      ephemeralReports:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      clusterEphemeralReports:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      admissionReports:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+      clusterAdmissionReports:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kubectl
+          tag: 1.31.2-r1
+    crds:
+      migration:
+        image:
+          registry: r.gamewarden.io
+          repository: base/kyvernocli
+          tag: "temp"
+kyvernoReporter:
+  values:
+    image:
+      registry: r.gamewarden.io
+      repository: base/policy-reporter
+      tag: 2.24.2-r0
+loki:
+  values:
+    loki:
+      image:
+        registry: r.gamewarden.io
+        repository: base/loki
+        tag: 3.0.0-r3
+    gateway:
+      image:
+        registry: r.gamewarden.io
+        repository: base/nginx
+        tag: 1.25.5-r2
+    sidecar:
+      image:
+        registry: r.gamewarden.io
+        repository: base/k8s-sidecar
+        tag: 1.27.6
+    minio:
+      tenant:
+        image:
+          repository: r.gamewarden.io/base/minio
+          tag: 0.20241013.133411-r0
+          pullPolicy: IfNotPresent
+monitoring:
+  values:
+    global:
+      imageRegistry: r.gamewarden.io
+    alertmanager:
+      alertmanagerSpec:
+        image:
+          registry: r.gamewarden.io
+          repository: base/alertmanager
+          tag: 0.27.0-r10
+    cleanUpgrade:
+      image:
+        registry: r.gamewarden.io
+        repository: base/base
+        tag: 0.1.0-r0
+    grafana:
+      image:
+        registry: r.gamewarden.io
+        repository: base/grafana-plugins
+        tag: 11.2.0
+    kube-state-metrics:
+      image:
+        registry: r.gamewarden.io
+        repository: base/kube-state-metrics
+        tag: 2.13.0-r1
+    prometheus:
+      prometheusSpec:
+        image:
+          registry: r.gamewarden.io
+          repository: base/prometheus
+          tag: 2.54.1-r1
+    prometheus-node-exporter:
+      image:
+        registry: r.gamewarden.io
+        repository: base/node-exporter
+        tag: 1.8.2-r2
+    prometheusOperator:
+      admissionWebhooks:
+        cleanupProxy:
+          image:
+            registry: r.gamewarden.io
+            repository: base/base
+            tag: 0.1.0-r0
+        patch:
+          image:
+            registry: r.gamewarden.io
+            repository: base/kube_webhook_certgen
+            tag: 1.11.2-r3
+      image:
+        registry: r.gamewarden.io
+        repository: base/prometheus-operator
+        tag: 0.78.0-r0
+      prometheusConfigReloader:
+        image:
+          registry: r.gamewarden.io
+          repository: base/prometheus-config-reloader
+          tag: 0.78.0-r0
+tempo:
+  values:
+    tempo:
+      repository: r.gamewarden.io/base/tempo
+      tag: 2.6.1-r1
+    tempoQuery:
+      repository: r.gamewarden.io/base/tempo-query
+      tag: '2.5.0'
+

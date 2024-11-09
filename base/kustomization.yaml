@@ -1,0 +1,49 @@
+configMapGenerator:
+- behavior: merge
+  files:
+  - values.yaml=configmap.yaml
+  name: common
+- behavior: create
+  files:
+  - values.yaml=bigbang-images-patch.yaml
+  options:
+    disableNameSuffixHash: true
+  namespace: bigbang
+  name: bb-images
+
+resources:
+- https://repo1.dso.mil/platform-one/big-bang/bigbang.git/base?ref=2.39.0
+- helmrepo.yaml
+- cosignsecret.yaml
+
+patches:
+- path: flux-image-patch.yaml
+- path: secret.enc.yaml
+- patch: |-
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: bigbang
+    spec:
+      interval: 1m
+      chart:
+        spec:
+          chart: bigbang
+          version: 2.39.0
+          sourceRef:
+            kind: HelmRepository
+            name: registry1
+      valuesFrom:
+        - kind: Secret
+          name: terraform
+          optional: true
+        - kind: Secret
+          name: common-bb
+        - kind: ConfigMap
+          name: common
+        - kind: Secret
+          name: environment-bb
+        - kind: ConfigMap
+          name: environment
+        - kind: ConfigMap
+          name: bb-images

@@ -1,0 +1,27 @@
+configMapGenerator:
+- behavior: merge
+  files:
+  - values.yaml=configmap.yaml
+  name: environment
+- name: gamewarden-realm
+  options:
+    disableNameSuffixHash: true
+  namespace: keycloak
+  files:
+  - realm.json=realm.json
+resources:
+- ../base
+- ns-keycloak.yaml
+
+patches:
+- patch: |-
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: GitRepository
+    metadata:
+      name: bigbang
+    spec:
+      interval: 1m
+  # Use the following three lines to test a new version of Big Bang without affecting other environments
+  #   ref:
+  #     $patch: replace
+  #     tag: 2.34.0
