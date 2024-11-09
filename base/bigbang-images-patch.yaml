@@ -37,7 +37,7 @@ addons:
           tag: '16.4-r0'
       image:
         repository: r.gamewarden.io/base/keycloak
-        tag: 25.0.6-r0
+        tag: 25.0.6
       postgresql:
         image:
           registry: r.gamewarden.io
