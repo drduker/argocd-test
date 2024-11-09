@@ -83,17 +83,16 @@ istio:
   values:
     hub: r.gamewarden.io/base
     tag: 1.22.4
-    values:
-      global:
-        proxy:
-          image: istio-proxy
-        proxy_init:
-          image: istio-proxy
-      pilot:
-        image: istio-pilot
-      postInstallHook:
-        image: r.gamewarden.io/base/base
-        tag: 0.1.0-r0
+    global:
+      proxy:
+        image: istio-proxy
+      proxy_init:
+        image: istio-proxy
+    pilot:
+      image: istio-pilot
+    postInstallHook:
+      image: r.gamewarden.io/base/base
+      tag: 0.1.0-r0
     waitJob:
       scripts:
         image: r.gamewarden.io/base/kubectl_dev:1.30.3-r0
